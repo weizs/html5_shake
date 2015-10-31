@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="email=no" name="format-detection">
+    <meta name="msapplication-tap-highlight" content="no" />
     <title>摇一摇</title>
     <script src="js/shake.js"></script>
     <style>
@@ -20,20 +25,17 @@
             100%  {top:-100px;}
         }
 
-        @-webkit-keyframes slide_up
-        {
+        @-webkit-keyframes slide_up {
             0%   {top:0;}
             100%  {top:-100px;}
         }
 
-        @keyframes slide_down
-        {
+        @keyframes slide_down{
             0%   {bottom:0;}
             100%  {bottom:-100px;}
         }
 
-        @-webkit-keyframes slide_down
-        {
+        @-webkit-keyframes slide_down{
             0%   {bottom:0;}
             100%  {bottom:-100px;}
         }
@@ -75,7 +77,14 @@
 
     shake.start();
 
-    function supportCss3(style) {
+    var vibrate = function(){
+        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+        if (navigator.vibrate) {
+            navigator.vibrate([500, 100, 100, 100, 500, 100, 100, 100, 500, 100, 100, 100,0]);
+        }
+    };
+
+    var supportCss3 = function(style) {
         var prefix = ['webkit', 'Moz', 'ms', 'o'],
                 i,
                 humpString = [],
@@ -95,7 +104,7 @@
             if (humpString[i] in htmlStyle) return true;
 
         return false;
-    }
+    };
 
     var ShakeAnimate = function(support){
         var begin = function(){
@@ -115,6 +124,7 @@
             down.style.bottom='0px';
             down.style.display='none';
             match.play();
+            vibrate();
         };
         if(support){
             this.animate = function(){
