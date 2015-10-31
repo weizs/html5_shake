@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <title>摇一摇</title>
+    <script src="js/shake.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box;}
+        html,body { height: 100%;}
+        .fore { background: url("images/shake.jpg") no-repeat center; background-size: 100% 100%; position: absolute; z-index: 3; width: 100%; height: 100%;}
+
+        .move-wrap { width: 100%; height: 100%; overflow: hidden; position: relative;}
+        .up { background: url("images/shake.jpg") no-repeat center top; background-size: 100% 200%; position: absolute; z-index: 3; width: 100%; height: 50%; top:0;}
+        .down { background: url("images/shake.jpg") no-repeat center bottom; background-size: 100% 200%; position: absolute; z-index: 3; width: 100%; height: 50%; bottom: 0;}
+
+        @keyframes slide_up
+        {
+            0%   {top:0;}
+            100%  {top:-100px;}
+        }
+
+        @-webkit-keyframes slide_up
+        {
+            0%   {top:0;}
+            100%  {top:-100px;}
+        }
+
+        @keyframes slide_down
+        {
+            0%   {bottom:0;}
+            100%  {bottom:-100px;}
+        }
+
+        @-webkit-keyframes slide_down
+        {
+            0%   {bottom:0;}
+            100%  {bottom:-100px;}
+        }
+
+        .animate-up {
+            transition: top 1.5s linear;
+            -webkit-transition: top 1.5s linear;
+        }
+        .animate-down {
+            transition: bottom 1.5s linear;
+            -webkit-transition: bottom 1.5s linear;
+        }
+
+        .back { background: #666; position: absolute; z-index: 1;width: 100%; height: 100%; color: #FFF;}
+        .f { height: 22px; position: relative; top:50%; width: 100%; text-align: center; margin-top: -11px;}
+    </style>
+</head>
+<body>
+<div class="back">
+    <div class="f">小红花</div>
+</div>
+<div id="fore" class="fore"></div>
+<div class="move-wrap">
+    <div id="up" class="up animate-up" style="display: none;"></div>
+    <div id="down" class="down animate-down" style="display: none;"></div>
+</div>
+<audio id="run" src="js/shake_sound_male.mp3"></audio>
+<audio id="match" src="js/shake_match.mp3"></audio>
+<script>
+    var shake = new Shake({
+        threshold: 15,
+        timeout: 1000
+    }),
+    run = document.getElementById('run'),
+    match = document.getElementById('match'),
+    fore = document.getElementById('fore'),
+    up = document.getElementById('up'),
+    down = document.getElementById('down');
+
+    shake.start();
+
+    function supportCss3(style) {
+        var prefix = ['webkit', 'Moz', 'ms', 'o'],
+                i,
+                humpString = [],
+                htmlStyle = document.documentElement.style,
+                _toHumb = function (string) {
+                    return string.replace(/-(\w)/g, function ($0, $1) {
+                        return $1.toUpperCase();
+                    });
+                };
+
+        for (i in prefix)
+            humpString.push(_toHumb(prefix[i] + '-' + style));
+
+        humpString.push(_toHumb(style));
+
+        for (i in humpString)
+            if (humpString[i] in htmlStyle) return true;
+
+        return false;
+    }
+
+    var ShakeAnimate = function(support){
+        var begin = function(){
+            fore.style.display='none';
+            up.style.display='block';
+            down.style.display='block';
+        };
+
+        var end = function(){
+            if(!support&&isEnd) return ;
+            isEnd =1;
+            upStep = - upStep;
+            downStep = - downStep;
+            fore.style.display='block';
+            up.style.top = '0px';
+            up.style.display='none';
+            down.style.bottom='0px';
+            down.style.display='none';
+            match.play();
+        };
+        if(support){
+            this.animate = function(){
+                begin();
+                setTimeout(function(){
+                    up.style.top='-100px';
+                    down.style.bottom='-100px';
+                    setTimeout(function(){
+                        up.style.top='0px';
+                        down.style.bottom='0px';
+                        setTimeout(function(){
+                            end();
+                            match.play();
+                        },1500);
+                    },2500);
+                },0);
+            };
+        }else{
+            var isEnd = 0;
+
+            var openingSpeed = 8;
+            var openedDelay = 2000;
+
+            var moveMax = -100;
+
+            var upStep = 1;
+            var downStep = 1;
+
+            var isUpBack = 0;
+            var isDownBack = 0;
+
+            var moveUp = function(){
+                var top = parseFloat(up.style.top)||0;
+                if(isUpBack&&top>=0) {
+                    end();
+                    return;
+                }
+                up.style.top=top-upStep + 'px';
+                if(isUpBack||top>moveMax){
+                    setTimeout(moveUp,openingSpeed);
+                }else{
+                    isUpBack = 1;
+                    upStep = - upStep;
+                    setTimeout(moveUp,openedDelay);
+                }
+            };
+
+            var moveDown = function(){
+                var bottom = parseFloat(down.style.bottom)||0;
+                if(isDownBack&&bottom>=0) {
+                    end();
+                    return ;
+                }
+                down.style.bottom=bottom-downStep + 'px';
+                if(isDownBack||bottom>moveMax){
+                    setTimeout(moveDown,openingSpeed);
+                }else{
+                    isDownBack =1;
+                    downStep = - downStep;
+                    setTimeout(moveDown,openedDelay);
+                }
+            };
+
+            this.animate = function(){
+                isEnd = 0;
+                isUpBack = 0;
+                isDownBack = 0;
+                begin();
+                moveUp();
+                moveDown();
+            };
+        }
+    };
+
+    var ani = new ShakeAnimate(supportCss3('transition'));
+
+    window.addEventListener('shake', shakeEventDidOccur, false);
+
+    function shakeEventDidOccur() {
+        run.play();
+        ani.animate();
+    }
+
+</script>
+</body>
+</html>
