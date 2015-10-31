@@ -193,7 +193,7 @@
             down.style.bottom = '0px';
             down.style.display = 'none';
             match.play();
-            vibrate();
+//            vibrate();
         };
         if (support) {
             this.animate = function () {
@@ -206,7 +206,6 @@
                         down.style.bottom = '0px';
                         setTimeout(function () {
                             end();
-                            match.play();
                         }, 1500);
                     }, 2500);
                 }, 1);
