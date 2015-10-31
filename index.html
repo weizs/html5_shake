@@ -7,50 +7,119 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
     <meta content="email=no" name="format-detection">
-    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="msapplication-tap-highlight" content="no"/>
     <title>摇一摇</title>
     <script src="js/shake.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box;}
-        html,body { height: 100%;}
-        .fore { background: url("images/shake.jpg") no-repeat center; background-size: 100% 100%; position: absolute; z-index: 3; width: 100%; height: 100%;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        .move-wrap { width: 100%; height: 100%; overflow: hidden; position: relative;}
-        .up { background: url("images/shake.jpg") no-repeat center top; background-size: 100% 200%; position: absolute; z-index: 3; width: 100%; height: 50%; top:0;}
-        .down { background: url("images/shake.jpg") no-repeat center bottom; background-size: 100% 200%; position: absolute; z-index: 3; width: 100%; height: 50%; bottom: 0;}
+        html, body {
+            height: 100%;
+        }
 
-        @keyframes slide_up
-        {
-            0%   {top:0;}
-            100%  {top:-100px;}
+        .fore {
+            background: url("images/shake.jpg") no-repeat center;
+            background-size: 100% 100%;
+            position: absolute;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+        }
+
+        .move-wrap {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .up {
+            background: url("images/shake.jpg") no-repeat center top;
+            background-size: 100% 200%;
+            position: absolute;
+            z-index: 3;
+            width: 100%;
+            height: 50%;
+            top: 0;
+        }
+
+        .down {
+            background: url("images/shake.jpg") no-repeat center bottom;
+            background-size: 100% 200%;
+            position: absolute;
+            z-index: 3;
+            width: 100%;
+            height: 50%;
+            bottom: 0;
+        }
+
+        @keyframes slide_up {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: -100px;
+            }
         }
 
         @-webkit-keyframes slide_up {
-            0%   {top:0;}
-            100%  {top:-100px;}
+            0% {
+                top: 0;
+            }
+            100% {
+                top: -100px;
+            }
         }
 
-        @keyframes slide_down{
-            0%   {bottom:0;}
-            100%  {bottom:-100px;}
+        @keyframes slide_down {
+            0% {
+                bottom: 0;
+            }
+            100% {
+                bottom: -100px;
+            }
         }
 
-        @-webkit-keyframes slide_down{
-            0%   {bottom:0;}
-            100%  {bottom:-100px;}
+        @-webkit-keyframes slide_down {
+            0% {
+                bottom: 0;
+            }
+            100% {
+                bottom: -100px;
+            }
         }
 
         .animate-up {
             transition: top 1.5s linear;
             -webkit-transition: top 1.5s linear;
         }
+
         .animate-down {
             transition: bottom 1.5s linear;
             -webkit-transition: bottom 1.5s linear;
         }
 
-        .back { background: #666; position: absolute; z-index: 1;width: 100%; height: 100%; color: #FFF;}
-        .f { height: 22px; position: relative; top:50%; width: 100%; text-align: center; margin-top: -11px;}
+        .back {
+            background: #666;
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            color: #FFF;
+        }
+
+        .f {
+            height: 22px;
+            position: relative;
+            top: 50%;
+            width: 100%;
+            text-align: center;
+            margin-top: -11px;
+        }
     </style>
 </head>
 <body>
@@ -66,25 +135,25 @@
 <audio id="match" src="js/shake_match.mp3"></audio>
 <script>
     var shake = new Shake({
-        threshold: 15,
-        timeout: 1000
-    }),
-    run = document.getElementById('run'),
-    match = document.getElementById('match'),
-    fore = document.getElementById('fore'),
-    up = document.getElementById('up'),
-    down = document.getElementById('down');
+                threshold: 15,
+                timeout: 1000
+            }),
+            run = document.getElementById('run'),
+            match = document.getElementById('match'),
+            fore = document.getElementById('fore'),
+            up = document.getElementById('up'),
+            down = document.getElementById('down');
 
     shake.start();
 
-    var vibrate = function(){
+    var vibrate = function () {
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
         if (navigator.vibrate) {
-            navigator.vibrate([500, 100, 100, 100, 500, 100, 100, 100, 500, 100, 100, 100,0]);
+            navigator.vibrate([500, 100, 100, 100, 500, 100, 100, 100, 500, 100, 100, 100, 0]);
         }
     };
 
-    var supportCss3 = function(style) {
+    var supportCss3 = function (style) {
         var prefix = ['webkit', 'Moz', 'ms', 'o'],
                 i,
                 humpString = [],
@@ -106,43 +175,43 @@
         return false;
     };
 
-    var ShakeAnimate = function(support){
-        var begin = function(){
-            fore.style.display='none';
-            up.style.display='block';
-            down.style.display='block';
+    var ShakeAnimate = function (support) {
+        var begin = function () {
+            fore.style.display = 'none';
+            up.style.display = 'block';
+            down.style.display = 'block';
         };
 
-        var end = function(){
-            if(!support&&isEnd) return ;
-            isEnd =1;
-            upStep = - upStep;
-            downStep = - downStep;
-            fore.style.display='block';
+        var end = function () {
+            if (!support && isEnd) return;
+            isEnd = 1;
+            upStep = -upStep;
+            downStep = -downStep;
+            fore.style.display = 'block';
             up.style.top = '0px';
-            up.style.display='none';
-            down.style.bottom='0px';
-            down.style.display='none';
+            up.style.display = 'none';
+            down.style.bottom = '0px';
+            down.style.display = 'none';
             match.play();
             vibrate();
         };
-        if(support){
-            this.animate = function(){
+        if (support) {
+            this.animate = function () {
                 begin();
-                setTimeout(function(){
-                    up.style.top='-100px';
-                    down.style.bottom='-100px';
-                    setTimeout(function(){
-                        up.style.top='0px';
-                        down.style.bottom='0px';
-                        setTimeout(function(){
+                setTimeout(function () {
+                    up.style.top = '-100px';
+                    down.style.bottom = '-100px';
+                    setTimeout(function () {
+                        up.style.top = '0px';
+                        down.style.bottom = '0px';
+                        setTimeout(function () {
                             end();
                             match.play();
-                        },1500);
-                    },2500);
-                },0);
+                        }, 1500);
+                    }, 2500);
+                }, 0);
             };
-        }else{
+        } else {
             var isEnd = 0;
 
             var openingSpeed = 8;
@@ -156,39 +225,39 @@
             var isUpBack = 0;
             var isDownBack = 0;
 
-            var moveUp = function(){
-                var top = parseFloat(up.style.top)||0;
-                if(isUpBack&&top>=0) {
+            var moveUp = function () {
+                var top = parseFloat(up.style.top) || 0;
+                if (isUpBack && top >= 0) {
                     end();
                     return;
                 }
-                up.style.top=top-upStep + 'px';
-                if(isUpBack||top>moveMax){
-                    setTimeout(moveUp,openingSpeed);
-                }else{
+                up.style.top = top - upStep + 'px';
+                if (isUpBack || top > moveMax) {
+                    setTimeout(moveUp, openingSpeed);
+                } else {
                     isUpBack = 1;
-                    upStep = - upStep;
-                    setTimeout(moveUp,openedDelay);
+                    upStep = -upStep;
+                    setTimeout(moveUp, openedDelay);
                 }
             };
 
-            var moveDown = function(){
-                var bottom = parseFloat(down.style.bottom)||0;
-                if(isDownBack&&bottom>=0) {
+            var moveDown = function () {
+                var bottom = parseFloat(down.style.bottom) || 0;
+                if (isDownBack && bottom >= 0) {
                     end();
-                    return ;
+                    return;
                 }
-                down.style.bottom=bottom-downStep + 'px';
-                if(isDownBack||bottom>moveMax){
-                    setTimeout(moveDown,openingSpeed);
-                }else{
-                    isDownBack =1;
-                    downStep = - downStep;
-                    setTimeout(moveDown,openedDelay);
+                down.style.bottom = bottom - downStep + 'px';
+                if (isDownBack || bottom > moveMax) {
+                    setTimeout(moveDown, openingSpeed);
+                } else {
+                    isDownBack = 1;
+                    downStep = -downStep;
+                    setTimeout(moveDown, openedDelay);
                 }
             };
 
-            this.animate = function(){
+            this.animate = function () {
                 isEnd = 0;
                 isUpBack = 0;
                 isDownBack = 0;
